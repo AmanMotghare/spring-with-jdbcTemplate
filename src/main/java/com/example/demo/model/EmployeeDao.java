@@ -30,8 +30,9 @@ public class EmployeeDao {
 			public Boolean doInPreparedStatement(PreparedStatement ps) throws SQLException, DataAccessException {
 				// TODO Auto-generated method stub
 				ps.setInt(1, e.getId());
-				ps.setString(2,e.getName());
-				ps.setString(3,e.getAddress());
+				ps.setString(2,e.getAddress());
+				ps.setString(3,e.getName());
+				
 				return ps.execute();
 			}
 			
