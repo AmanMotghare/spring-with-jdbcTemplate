@@ -13,31 +13,32 @@ import com.example.demo.model.EmployeeDao;
 
 @SpringBootApplication
 public class SpringHibernateIntegrationApplication {
-
+	
+	static EmployeeDao Dao;
+	
 	public static void main(String[] args) {
 		SpringApplication.run(SpringHibernateIntegrationApplication.class, args);
 		
 		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 		
-		EmployeeDao Dao = (EmployeeDao) context.getBean("empDao");
+		Dao = (EmployeeDao) context.getBean("empDao");
 		
 		Scanner scan = new Scanner(System.in);
-		Employee e;
+		Employee e = new Employee();
 		
 		int choice = 0;
-		
+		int id;
 		boolean flag=true;
 		
 		String Name;
 		String Address;
-	
+		
 		while(flag) {
 			System.out.println("****************************");
 			System.out.println("(1).Insert Data");
 			System.out.println("(2).Show Data");
 			System.out.println("(3).Delete Data");
 			System.out.println("(4).Update Data");
-			System.out.println("(5).Search Data");
 			System.out.println("(0).Exit");
 			System.out.println("****************************");
 			
@@ -63,17 +64,65 @@ public class SpringHibernateIntegrationApplication {
 				
 			case 2:
 				System.out.println("All EMPLOYEEES ");
-				List<Employee> list = Dao.getAllEmployees();
-				for(Employee emp: list) {
-					System.out.println(emp);
-				}
+				getallEmployees();
 				break;
 				
 			case 3:
-				System.out.print("Enter Id to Update : ");
+				System.out.println("All EMPLOYEEES ");
+				getallEmployees();
+				
+				System.out.print("\nEnter Id to Delete : ");
+				
+				id = Integer.parseInt(scan.nextLine());
+				
+				e.setId(id);
+				
+				Dao.deleteEmployeeDetails(e);
+				System.out.println("Employee Details Deleted.");
 				
 				break;
-	
+				
+			case 4:
+				System.out.println("All EMPLOYEEES ");
+				getallEmployees();
+				
+				System.out.print("\nEnter Id to Update : ");
+				
+				id = Integer.parseInt(scan.nextLine());
+				
+				System.out.println("What do you want to update ?");
+				System.out.println("(1). Name");
+				System.out.println("(2). Address");
+				
+				int key = Integer.parseInt(scan.nextLine());
+				
+				switch (key) {
+				case 1:
+					System.out.println("Enter New Name : ");
+					Name = scan.nextLine();
+					Dao.updateEmployeeName(id, Name);
+					System.out.println("Name Updated");
+					System.out.println("All EMPLOYEEES ");
+					getallEmployees();
+				break;
+				
+				case 2:
+					System.out.println("Enter New Address : ");
+					Address = scan.nextLine();
+					Dao.updateEmployeeAddress(id, Address);
+					System.out.println("Address Updated");
+					System.out.println("All EMPLOYEEES ");
+					getallEmployees();
+					
+				break;
+
+				default:
+					System.out.println("Invalid Choice");
+				break;
+				}
+				
+				break;
+				
 			default:
 				System.out.println("Invalid Choice !! ");
 				break;
@@ -81,6 +130,14 @@ public class SpringHibernateIntegrationApplication {
 		
 		}
 		
+	}
+	
+	private static void getallEmployees() {
+		// TODO Auto-generated method stub
+		List<Employee> list = Dao.getAllEmployees();
+		for(Employee emp: list) {
+			System.out.println(emp);
+		}
 	}
 
 }

@@ -14,16 +14,17 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 public class EmployeeDao {
 	
 	JdbcTemplate template;
+	String sql;
 
 	public void setTemplate(JdbcTemplate template) {
 		this.template = template;
 	}
 	
-	
+	//create
 	public Boolean saveEmployee(Employee e)
 	{
-		String Query = "insert into emp_tb values(?,?,?)";
-		return template.execute(Query,new PreparedStatementCallback<Boolean>(){
+		sql = "insert into emp_tb values(?,?,?)";
+		return template.execute(sql,new PreparedStatementCallback<Boolean>(){
 
 			@Override
 			public Boolean doInPreparedStatement(PreparedStatement ps) throws SQLException, DataAccessException {
@@ -37,9 +38,10 @@ public class EmployeeDao {
 		});
 	}
 	
+	//readAll
 	public List<Employee> getAllEmployees() {
 		
-		String sql = "select * from emp_tb";
+		sql = "select * from emp_tb";
 		return template.query(sql, new ResultSetExtractor<List<Employee>>() {
 
 			@Override
@@ -61,6 +63,70 @@ public class EmployeeDao {
 		});
 		
 	}
+	
+	
+	//Update Name 
+	public Boolean updateEmployeeName(int id, String Name) {
+		
+		sql= "UPDATE EMP_TB SET NAME = ? WHERE ID = ?";
+		
+		return template.execute(sql, new PreparedStatementCallback<Boolean>() {
+
+			@Override
+			public Boolean doInPreparedStatement(PreparedStatement ps) throws SQLException, DataAccessException {
+				// TODO Auto-generated method stub
+				
+				ps.setString(1, Name);
+				ps.setInt(2, id);
+				return ps.execute();
+			}
+			
+		});
+		
+	}
+	
+	
+	//Update Address 
+		public Boolean updateEmployeeAddress(int id, String Address) {
+			
+			sql= "UPDATE EMP_TB SET ADDRESS = ? WHERE ID = ?";
+			
+			return template.execute(sql, new PreparedStatementCallback<Boolean>() {
+
+				@Override
+				public Boolean doInPreparedStatement(PreparedStatement ps) throws SQLException, DataAccessException {
+					// TODO Auto-generated method stub
+					
+					ps.setString(1, Address);
+					ps.setInt(2, id);
+					return ps.execute();
+				}
+				
+			});
+			
+		}
+	
+	
+	
+	
+	//deleteById
+	public Boolean deleteEmployeeDetails(Employee e) {
+		
+		sql = "delete from emp_tb where id=?";
+		return template.execute(sql, new PreparedStatementCallback<Boolean>() {
+
+			@Override
+			public Boolean doInPreparedStatement(PreparedStatement ps) throws SQLException, DataAccessException {
+				// TODO Auto-generated method stub
+				ps.setInt(1, e.getId());
+				return ps.execute();
+			}
+		});
+		
+	}
+	
+	
+	
 	
 
 }
